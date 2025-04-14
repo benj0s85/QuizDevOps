@@ -3,6 +3,7 @@ const path = require('path');
 const { sequelize } = require('./models');
 const quizRoutes = require('./routes/quizRoutes');
 const userRoutes = require('./routes/userRoutes');
+const attemptRoutes = require('./routes/attemptRoutes');
 require('dotenv').config();
 
 const app = express();
@@ -10,6 +11,7 @@ app.use(express.json());
 
 app.use('/api/quiz', quizRoutes);
 app.use('/api/users', userRoutes);
+app.use('/api/attempts', attemptRoutes);
 app.use(express.urlencoded({ extended: true }));
 
 const PORT = process.env.PORT || 5000;
