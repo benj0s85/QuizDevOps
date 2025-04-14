@@ -111,10 +111,48 @@ const deleteQuiz = async (id) => {
   await quiz.destroy();
 };
 
+const submitQuiz = async (quizId, answers) => {
+  const quiz = await Quiz.findByPk(quizId, {
+    include: {
+      model: Question,
+      include: [Option],
+    },
+  });
+
+  if (!quiz) throw new Error('Quiz non trouvé');
+
+  let score = 0;
+  const results = [];
+
+  for (const userAnswer of answers) {
+    const question = quiz.Questions.find(q => q.id === userAnswer.questionId);
+    if (!question) continue;
+
+    const correctOption = question.Options.find(opt => opt.isCorrect);
+    const isCorrect = correctOption?.text === userAnswer.selectedOption;
+
+    if (isCorrect) score++;
+
+    results.push({
+      questionId: question.id,
+      isCorrect,
+      correctAnswer: correctOption?.text,
+      userAnswer: userAnswer.selectedOption
+    });
+  }
+
+  return {
+    score,
+    total: quiz.Questions.length,
+    results
+  };
+};
+
 module.exports = {
   createQuiz,
   getAllQuizzes,
   getQuizById,
   updateQuiz,
   deleteQuiz,
+  submitQuiz
 };
