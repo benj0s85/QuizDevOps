@@ -154,4 +154,38 @@ describe("Quiz Controller", () => {
             expect(data).toEqual({ error: "Deletion error" });
         });
     });
+// Append these tests to backend/tests/quizController.test.js
+
+describe("submitQuiz", () => {
+    it("should submit a quiz successfully", async () => {
+        const req = httpMocks.createRequest({
+            params: { id: "1" },
+            body: { answers: { q1: "a", q2: "b" } }
+        });
+        const res = httpMocks.createResponse();
+        const result = { score: 80 };
+        quizService.submitQuiz.mockResolvedValue(result);
+        
+        await quizController.submitQuiz(req, res);
+        
+        expect(res.statusCode).toBe(200);
+        const data = res._getJSONData();
+        expect(data).toEqual(result);
+    });
+
+    it("should return an error if quiz submission fails", async () => {
+        const req = httpMocks.createRequest({
+            params: { id: "1" },
+            body: { answers: { q1: "a", q2: "b" } }
+        });
+        const res = httpMocks.createResponse();
+        quizService.submitQuiz.mockRejectedValue(new Error("Submission error"));
+        
+        await quizController.submitQuiz(req, res);
+        
+        expect(res.statusCode).toBe(400);
+        const data = res._getJSONData();
+        expect(data).toEqual({ error: "Submission error" });
+    });
+});
 });

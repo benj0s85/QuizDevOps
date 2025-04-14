@@ -3,8 +3,10 @@ const {
     getAllQuizzes,
     getQuizById,
     updateQuiz,
-    deleteQuiz
+    deleteQuiz,
+    submitQuiz
   } = require('../services/quizService');
+  
   
   // Créer un quiz
   exports.createQuiz = async (req, res) => {
@@ -58,3 +60,13 @@ const {
     }
   };
   
+  exports.submitQuiz = async (req, res) => {
+    try {
+      const quizId = req.params.id;
+      const answers = req.body.answers;
+      const result = await submitQuiz(quizId, answers);
+      res.status(200).json(result);
+    } catch (err) {
+      res.status(400).json({ error: err.message });
+    }
+  };

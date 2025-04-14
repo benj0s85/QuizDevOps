@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const quizController = require('../controllers/quizController');
+const { submitQuiz } = require('../controllers/quizController');
 
 // Créer un quiz avec questions + options
 router.post('/', quizController.createQuiz);
@@ -16,5 +17,7 @@ router.put('/:id', quizController.updateQuiz);
 
 // Supprimer un quiz
 router.delete('/:id', quizController.deleteQuiz);
+
+router.post('/:id/submit', submitQuiz);
 
 module.exports = router;

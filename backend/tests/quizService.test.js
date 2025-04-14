@@ -1,6 +1,7 @@
 const quizService = require('../services/quizService');
 const { Quiz, Question, Option } = require('../models');
 
+
 jest.mock('../models', () => ({
     Quiz: {
         create: jest.fn(),
@@ -224,6 +225,63 @@ describe('quizService', () => {
             await quizService.deleteQuiz(1);
             expect(Quiz.findByPk).toHaveBeenCalledWith(1);
             expect(fakeQuiz.destroy).toHaveBeenCalled();
+        });
+    });
+
+    describe('submitQuiz', () => {
+        const fakeQuiz = {
+            id: 1,
+            Questions: [
+                {
+                    id: 101,
+                    Options: [
+                        { text: "A", isCorrect: true },
+                        { text: "B", isCorrect: false },
+                    ],
+                },
+                {
+                    id: 102,
+                    Options: [
+                        { text: "C", isCorrect: false },
+                        { text: "D", isCorrect: true },
+                    ],
+                },
+            ],
+        };
+    
+        it('should throw an error when quiz is not found', async () => {
+            Quiz.findByPk.mockResolvedValue(null);
+            await expect(quizService.submitQuiz(99, [
+                { questionId: 101, selectedOption: "A" }
+            ])).rejects.toThrow('Quiz non trouvé');
+        });
+    
+        it('should calculate and return the correct score and results', async () => {
+            Quiz.findByPk.mockResolvedValue(fakeQuiz);
+            const answers = [
+                { questionId: 101, selectedOption: "A" }, // correct
+                { questionId: 102, selectedOption: "X" }, // incorrect
+                { questionId: 999, selectedOption: "anything" } // question inexistante, à ignorer
+            ];
+            const result = await quizService.submitQuiz(1, answers);
+            expect(result).toEqual({
+                score: 1,
+                total: fakeQuiz.Questions.length,
+                results: [
+                    {
+                        questionId: 101,
+                        isCorrect: true,
+                        correctAnswer: "A",
+                        userAnswer: "A"
+                    },
+                    {
+                        questionId: 102,
+                        isCorrect: false,
+                        correctAnswer: "D",
+                        userAnswer: "X"
+                    }
+                ]
+            });
         });
     });
 }); 
