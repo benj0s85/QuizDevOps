@@ -64,7 +64,8 @@ const {
     try {
       const quizId = req.params.id;
       const answers = req.body.answers;
-      const result = await submitQuiz(quizId, answers);
+      const userId = req.userId;
+      const result = await submitQuiz(quizId, answers, userId);
       res.status(200).json(result);
     } catch (err) {
       res.status(400).json({ error: err.message });

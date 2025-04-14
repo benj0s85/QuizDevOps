@@ -1,4 +1,5 @@
 const { Quiz, Question, Option } = require('../models');
+const { recordAttempt } = require('./quizAttemptService');
 
 // Créer un quiz
 const createQuiz = async (theme, questions) => {
@@ -111,7 +112,7 @@ const deleteQuiz = async (id) => {
   await quiz.destroy();
 };
 
-const submitQuiz = async (quizId, answers) => {
+const submitQuiz = async (quizId, answers, userId) => {
   const quiz = await Quiz.findByPk(quizId, {
     include: {
       model: Question,
@@ -130,7 +131,6 @@ const submitQuiz = async (quizId, answers) => {
 
     const correctOption = question.Options.find(opt => opt.isCorrect);
     const isCorrect = correctOption?.text === userAnswer.selectedOption;
-
     if (isCorrect) score++;
 
     results.push({
@@ -140,6 +140,8 @@ const submitQuiz = async (quizId, answers) => {
       userAnswer: userAnswer.selectedOption
     });
   }
+
+  await recordAttempt(userId, quizId, score, quiz.Questions.length);
 
   return {
     score,

@@ -21,3 +21,66 @@ Les test primordiaux pour une application sont :
 - Les test d'intégration
 - Tests de régression
 - Tests de sécurité
+
+Requête API (Les principal):
+
+Créer un Quiz (http://localhost:8080/api/quiz) POST:
+{
+  "theme": "Histoire",
+  "questions": [
+    {
+      "questionText": "Qui a découvert l'Amérique ?",
+      "options": [
+        { "text": "Christophe Colomb", "isCorrect": true },
+        { "text": "Napoléon", "isCorrect": false },
+        { "text": "Jules César", "isCorrect": false }
+      ]
+    },
+    {
+      "questionText": "En quelle année la Révolution française a-t-elle commencé ?",
+      "options": [
+        { "text": "1789", "isCorrect": true },
+        { "text": "1492", "isCorrect": false },
+        { "text": "1914", "isCorrect": false }
+      ]
+    }, 
+     {
+      "questionText": "En quelle année la Révolution française a-t-elle commencé ?",
+      "options": [
+        { "text": "1789", "isCorrect": true },
+        { "text": "1492", "isCorrect": false },
+        { "text": "1914", "isCorrect": false }
+      ]
+    }
+  ]
+}
+
+Répondre à un quiz (http://localhost:8080/api/quiz/1/submit) POST :
+Change les id des question ID seulont leurs numéro et selon le formulaire
+{
+  "answers": [
+    { "questionId": 1, "selectedOption": "Christophe Colomb" },
+    { "questionId": 2, "selectedOption": "1789" },
+    { "questionId": 3, "selectedOption": "1492" }
+  ]
+}
+
+POST : Créer un user (http://localhost:8080/api/users/) :
+{
+  "username": "admin_jane",
+  "email": "jane@example.com",
+  "password": "adminPass456",
+  "role": "administrateur"
+}
+
+GET : Nombre de fois ou le quiz a été fait (http://localhost:8080/api/attempts/quiz/1)
+
+Ce que j'ai pu faire :
+Création back des quiz avec persistance
+Création back pour répondre aux quiz
+Calcul automatique de la note du quiz
+Mise en production sur DockerHub (CD ici)
+Ajout des utilisateurs créateur de quiz (pass non chiffré) Par role
+Ajout de l’administrateur (pass non chiffré) Par role
+Ajout des joueurs aux quiz (pass non chiffré) Par role
+Suivi des réponse par quiz mais pas par utilisateur

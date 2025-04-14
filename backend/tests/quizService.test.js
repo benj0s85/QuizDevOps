@@ -15,6 +15,9 @@ jest.mock('../models', () => ({
         create: jest.fn(),
         destroy: jest.fn(),
     },
+    QuizAttempt: {
+        create: jest.fn(),
+    },
 }));
 
 describe('quizService', () => {
