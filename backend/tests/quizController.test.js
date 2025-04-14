@@ -4,11 +4,11 @@ const quizService = require('../services/quizService');
 
 jest.mock('../services/quizService');
 
-describe("Quiz Controller", () => {
+describe("Contrôleur Quiz", () => {
     describe("createQuiz", () => {
-        it("should create a quiz successfully", async () => {
+        it("devrait créer un quiz avec succès", async () => {
             const req = httpMocks.createRequest({
-                body: { theme: "math", questions: ["q1", "q2"] }
+                body: { theme: "mathématiques", questions: ["q1", "q2"] }
             });
             const res = httpMocks.createResponse();
             quizService.createQuiz.mockResolvedValue({ id: "1" });
@@ -20,26 +20,26 @@ describe("Quiz Controller", () => {
             expect(data).toEqual({ message: 'Quiz créé avec succès', quizId: "1" });
         });
 
-        it("should return an error if quiz creation fails", async () => {
+        it("devrait retourner une erreur si la création du quiz échoue", async () => {
             const req = httpMocks.createRequest({
-                body: { theme: "science", questions: ["q1", "q2"] }
+                body: { theme: "sciences", questions: ["q1", "q2"] }
             });
             const res = httpMocks.createResponse();
-            quizService.createQuiz.mockRejectedValue(new Error("Creation error"));
+            quizService.createQuiz.mockRejectedValue(new Error("Erreur de création"));
             
             await quizController.createQuiz(req, res);
             
             expect(res.statusCode).toBe(400);
             const data = res._getJSONData();
-            expect(data).toEqual({ error: "Creation error" });
+            expect(data).toEqual({ error: "Erreur de création" });
         });
     });
 
     describe("getAllQuizzes", () => {
-        it("should retrieve all quizzes successfully", async () => {
+        it("devrait récupérer tous les quizzes avec succès", async () => {
             const req = httpMocks.createRequest();
             const res = httpMocks.createResponse();
-            const quizzes = [{ id: "1", theme: "math" }, { id: "2", theme: "science" }];
+            const quizzes = [{ id: "1", theme: "mathématiques" }, { id: "2", theme: "sciences" }];
             quizService.getAllQuizzes.mockResolvedValue(quizzes);
             
             await quizController.getAllQuizzes(req, res);
@@ -49,26 +49,26 @@ describe("Quiz Controller", () => {
             expect(data).toEqual(quizzes);
         });
 
-        it("should return an error if retrieving quizzes fails", async () => {
+        it("devrait retourner une erreur si la récupération des quizzes échoue", async () => {
             const req = httpMocks.createRequest();
             const res = httpMocks.createResponse();
-            quizService.getAllQuizzes.mockRejectedValue(new Error("Service error"));
+            quizService.getAllQuizzes.mockRejectedValue(new Error("Erreur du service"));
             
             await quizController.getAllQuizzes(req, res);
             
             expect(res.statusCode).toBe(500);
             const data = res._getJSONData();
-            expect(data).toEqual({ error: "Service error" });
+            expect(data).toEqual({ error: "Erreur du service" });
         });
     });
 
     describe("getQuizById", () => {
-        it("should retrieve a quiz by ID successfully", async () => {
+        it("devrait récupérer un quiz par ID avec succès", async () => {
             const req = httpMocks.createRequest({
                 params: { id: "1" }
             });
             const res = httpMocks.createResponse();
-            const quiz = { id: "1", theme: "math" };
+            const quiz = { id: "1", theme: "mathématiques" };
             quizService.getQuizById.mockResolvedValue(quiz);
             
             await quizController.getQuizById(req, res);
@@ -78,26 +78,26 @@ describe("Quiz Controller", () => {
             expect(data).toEqual(quiz);
         });
 
-        it("should return an error if quiz retrieval fails", async () => {
+        it("devrait retourner une erreur si la récupération du quiz échoue", async () => {
             const req = httpMocks.createRequest({
                 params: { id: "2" }
             });
             const res = httpMocks.createResponse();
-            quizService.getQuizById.mockRejectedValue(new Error("Not found"));
+            quizService.getQuizById.mockRejectedValue(new Error("Non trouvé"));
             
             await quizController.getQuizById(req, res);
             
             expect(res.statusCode).toBe(404);
             const data = res._getJSONData();
-            expect(data).toEqual({ error: "Not found" });
+            expect(data).toEqual({ error: "Non trouvé" });
         });
     });
 
     describe("updateQuiz", () => {
-        it("should update a quiz successfully", async () => {
+        it("devrait mettre à jour un quiz avec succès", async () => {
             const req = httpMocks.createRequest({
                 params: { id: "1" },
-                body: { theme: "history", questions: ["q1", "q2"] }
+                body: { theme: "histoire", questions: ["q1", "q2"] }
             });
             const res = httpMocks.createResponse();
             quizService.updateQuiz.mockResolvedValue();
@@ -109,24 +109,24 @@ describe("Quiz Controller", () => {
             expect(data).toEqual({ message: 'Quiz mis à jour avec succès' });
         });
 
-        it("should return an error if quiz update fails", async () => {
+        it("devrait retourner une erreur si la mise à jour du quiz échoue", async () => {
             const req = httpMocks.createRequest({
                 params: { id: "1" },
-                body: { theme: "geography", questions: ["q1", "q2"] }
+                body: { theme: "géographie", questions: ["q1", "q2"] }
             });
             const res = httpMocks.createResponse();
-            quizService.updateQuiz.mockRejectedValue(new Error("Update error"));
+            quizService.updateQuiz.mockRejectedValue(new Error("Erreur de mise à jour"));
             
             await quizController.updateQuiz(req, res);
             
             expect(res.statusCode).toBe(400);
             const data = res._getJSONData();
-            expect(data).toEqual({ error: "Update error" });
+            expect(data).toEqual({ error: "Erreur de mise à jour" });
         });
     });
 
     describe("deleteQuiz", () => {
-        it("should delete a quiz successfully", async () => {
+        it("devrait supprimer un quiz avec succès", async () => {
             const req = httpMocks.createRequest({
                 params: { id: "1" }
             });
@@ -140,52 +140,51 @@ describe("Quiz Controller", () => {
             expect(data).toEqual({ message: 'Quiz supprimé avec succès' });
         });
 
-        it("should return an error if quiz deletion fails", async () => {
+        it("devrait retourner une erreur si la suppression du quiz échoue", async () => {
             const req = httpMocks.createRequest({
                 params: { id: "1" }
             });
             const res = httpMocks.createResponse();
-            quizService.deleteQuiz.mockRejectedValue(new Error("Deletion error"));
+            quizService.deleteQuiz.mockRejectedValue(new Error("Erreur de suppression"));
             
             await quizController.deleteQuiz(req, res);
             
             expect(res.statusCode).toBe(404);
             const data = res._getJSONData();
-            expect(data).toEqual({ error: "Deletion error" });
+            expect(data).toEqual({ error: "Erreur de suppression" });
         });
-    });
-// Append these tests to backend/tests/quizController.test.js
-
-describe("submitQuiz", () => {
-    it("should submit a quiz successfully", async () => {
-        const req = httpMocks.createRequest({
-            params: { id: "1" },
-            body: { answers: { q1: "a", q2: "b" } }
-        });
-        const res = httpMocks.createResponse();
-        const result = { score: 80 };
-        quizService.submitQuiz.mockResolvedValue(result);
-        
-        await quizController.submitQuiz(req, res);
-        
-        expect(res.statusCode).toBe(200);
-        const data = res._getJSONData();
-        expect(data).toEqual(result);
     });
 
-    it("should return an error if quiz submission fails", async () => {
-        const req = httpMocks.createRequest({
-            params: { id: "1" },
-            body: { answers: { q1: "a", q2: "b" } }
+    describe("submitQuiz", () => {
+        it("devrait soumettre un quiz avec succès", async () => {
+            const req = httpMocks.createRequest({
+                params: { id: "1" },
+                body: { answers: { q1: "a", q2: "b" } }
+            });
+            const res = httpMocks.createResponse();
+            const result = { score: 80 };
+            quizService.submitQuiz.mockResolvedValue(result);
+            
+            await quizController.submitQuiz(req, res);
+            
+            expect(res.statusCode).toBe(200);
+            const data = res._getJSONData();
+            expect(data).toEqual(result);
         });
-        const res = httpMocks.createResponse();
-        quizService.submitQuiz.mockRejectedValue(new Error("Submission error"));
-        
-        await quizController.submitQuiz(req, res);
-        
-        expect(res.statusCode).toBe(400);
-        const data = res._getJSONData();
-        expect(data).toEqual({ error: "Submission error" });
+
+        it("devrait retourner une erreur si la soumission du quiz échoue", async () => {
+            const req = httpMocks.createRequest({
+                params: { id: "1" },
+                body: { answers: { q1: "a", q2: "b" } }
+            });
+            const res = httpMocks.createResponse();
+            quizService.submitQuiz.mockRejectedValue(new Error("Erreur de soumission"));
+            
+            await quizController.submitQuiz(req, res);
+            
+            expect(res.statusCode).toBe(400);
+            const data = res._getJSONData();
+            expect(data).toEqual({ error: "Erreur de soumission" });
+        });
     });
-});
 });

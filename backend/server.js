@@ -2,12 +2,14 @@ const express = require('express');
 const path = require('path');
 const { sequelize } = require('./models');
 const quizRoutes = require('./routes/quizRoutes');
+const userRoutes = require('./routes/userRoutes');
 require('dotenv').config();
 
 const app = express();
 app.use(express.json());
 
 app.use('/api/quiz', quizRoutes);
+app.use('/api/users', userRoutes);
 app.use(express.urlencoded({ extended: true }));
 
 const PORT = process.env.PORT || 5000;
